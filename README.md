@@ -19,12 +19,12 @@ REFRESH_DURATION=video list refresh duration in seconds, ex: 10
 SEARCH_QUERY=query to monitor, ex: cricket
 MAX_PAGES_TO_QUERY=max number of youtube api pages to query, use a smaller number to prevent exceeding quota, ex: 100
 DB_UPDATE_PARALLELISM=number of threads to spawn when updating entries in db, ideal setting depends on compute env, ex: 4
+DEFAULT_PAGE_LIMIT=number of items per page in youtube_query_monitor api response, default is 25
 # postgress db defaults
 POSTGRES_DB=query_monitor
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=postgres
 DB_HOST=db
-DEFAULT_PAGE_LIMIT=number of items per page in youtube_query_monitor api response, default is 25
 ```
 
 ### Run Using Docker-Compose (Recommended)

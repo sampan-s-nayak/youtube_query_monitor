@@ -45,3 +45,4 @@ urllib3==1.26.14
 vine==5.0.0
 wcwidth==0.2.6
 gunicorn
+psycopg2

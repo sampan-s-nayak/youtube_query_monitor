@@ -11,21 +11,21 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 from datetime import timedelta
 from pathlib import Path
-import environ
 import os
 
-env = environ.Env()
+env = os.environ
 # Set the project base directory
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Take environment variables from .env file
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+# print(BASE_DIR)
+# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-YOUTUBE_DATA_API_KEYS = env("YOUTUBE_DATA_API_KEYS")
-RESULT_REFRESH_SECONDS = int(env("REFRESH_DURATION"))
-SEARCH_QUERY = env("SEARCH_QUERY")
-MAX_PAGES_TO_QUERY_FROM_YOUTUBE = int(env("MAX_PAGES_TO_QUERY"))
-DB_UPDATE_PARALLELISM = int(env("DB_UPDATE_PARALLELISM"))
+YOUTUBE_DATA_API_KEYS = env.get("YOUTUBE_DATA_API_KEYS")
+RESULT_REFRESH_SECONDS = int(env.get("REFRESH_DURATION"))
+SEARCH_QUERY = env.get("SEARCH_QUERY")
+MAX_PAGES_TO_QUERY_FROM_YOUTUBE = int(env.get("MAX_PAGES_TO_QUERY"))
+DB_UPDATE_PARALLELISM = int(env.get("DB_UPDATE_PARALLELISM"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -97,11 +97,11 @@ WSGI_APPLICATION = 'youtube_query_monitor.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DB'),
-        'USER': env('POSTGRES_USER'),
-        'PASSWORD': env('POSTGRES_PASSWORD'),
+        'NAME': env.get('POSTGRES_DB'),
+        'USER': env.get('POSTGRES_USER'),
+        'PASSWORD': env.get('POSTGRES_PASSWORD'),
         # é o nome do service 'db' no docker-compose.
-        'HOST': env('DB_HOST', 'db'),
+        'HOST': env.get('DB_HOST', 'db'),
         'PORT': '5432',
     }
 }
@@ -146,8 +146,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Celery settings
-CELERY_BROKER_URL = "redis://localhost:6379"
-CELERY_RESULT_BACKEND = "redis://localhost:6379"
+CELERY_BROKER_URL = "redis://redis:6379"
+CELERY_RESULT_BACKEND = "redis://redis:6379"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_BEAT_SCHEDULE = {
     "update_db_task": {

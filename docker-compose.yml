@@ -26,12 +26,14 @@ services:
       stdin_open: true
       expose:
         - '8000'
-      command: python manage.py migrate && gunicorn youtube_query_monitor.wsgi:application -b 0.0.0.0:8000
+      command: bash -c  "python manage.py migrate && gunicorn youtube_query_monitor.wsgi:application -b 0.0.0.0:8000"
       depends_on:
         - redis
         - db
       networks:
         - live
+      env_file:
+        - .env
     nginx:
       image: nginx
       hostname: nginx
@@ -55,11 +57,13 @@ services:
       restart: on-failure
       networks:
         - live
+      env_file:
+        - .env
     celery-beat-scheduler:
       build:
         context: .
         dockerfile: Dockerfile
-      command: "celery -A youtube_query_monitor beat -l info    "
+      command: "celery -A youtube_query_monitor beat -l info"
       depends_on:
         - app
         - redis
@@ -67,6 +71,8 @@ services:
       restart: on-failure
       networks:
         - live
+      env_file:
+        - .env
 
 volumes:
   db-data:

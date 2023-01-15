@@ -1,0 +1,75 @@
+version: '3.7'
+
+services:
+    db:
+      image: postgres:13.0-alpine
+      restart: unless-stopped
+      volumes:
+        - db-data:/var/lib/postgresql/data
+      environment:
+        POSTGRES_DB: query_monitor
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+      networks:
+        - live
+    redis:
+      restart: unless-stopped
+      image: redis/redis-stack-server
+      hostname: redis
+      networks:
+        - live
+    app:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      hostname: app
+      stdin_open: true
+      expose:
+        - '8000'
+      command: python manage.py migrate && gunicorn youtube_query_monitor.wsgi:application -b 0.0.0.0:8000
+      depends_on:
+        - redis
+        - db
+      networks:
+        - live
+    nginx:
+      image: nginx
+      hostname: nginx
+      ports:
+        - '82:8000'
+      volumes:
+        - ./config/nginx:/etc/nginx/conf.d
+      depends_on:
+        - app
+      networks:
+        - live
+    celery-worker:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      command: "celery -A youtube_query_monitor worker"
+      depends_on:
+        - app
+        - redis
+        - db
+      restart: on-failure
+      networks:
+        - live
+    celery-beat-scheduler:
+      build:
+        context: .
+        dockerfile: Dockerfile
+      command: "celery -A youtube_query_monitor beat -l info    "
+      depends_on:
+        - app
+        - redis
+        - db
+      restart: on-failure
+      networks:
+        - live
+
+volumes:
+  db-data:
+
+networks:
+  live:

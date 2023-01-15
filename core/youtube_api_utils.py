@@ -36,7 +36,7 @@ def get_video_list(query: str = SEARCH_QUERY, published_after: str = '1970-01-01
                 next_page_token = response.get("nextPageToken")
 
             while next_page_token and num_pages_queried < MAX_PAGES_TO_QUERY_FROM_YOUTUBE:
-                # fetching subsequent pages of the search api response
+                # fetching subsequent pages of the search api response, restricting num pages to prevent abuse
                 response = client.search().list(
                     q=query,
                     part=DEFAULT_PARTS,

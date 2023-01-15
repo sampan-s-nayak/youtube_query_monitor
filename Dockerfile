@@ -8,5 +8,5 @@ RUN pip install -U pip && pip install -r requirements.txt
 
 COPY .env .
 COPY manage.py .
-COPY youtube_api ./youtube_api
+COPY core ./core
 COPY youtube_query_monitor ./youtube_query_monitor

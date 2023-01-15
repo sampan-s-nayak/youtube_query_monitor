@@ -15,7 +15,7 @@ def update_db(self):
     We fetch the latest data from youtube API and add it to your DB.
     """
     from youtube_query_monitor.settings import RESULT_REFRESH_SECONDS, SEARCH_QUERY, DB_UPDATE_PARALLELISM
-    from youtube_api.youtube_api_utils import get_video_list
+    from core.youtube_api_utils import get_video_list
     from concurrent.futures import ThreadPoolExecutor
 
     print("fetching videos...")
@@ -29,7 +29,7 @@ def update_db(self):
 
 
 def _save_videos_in_db(video_item: dict):
-    from youtube_api.models import Videos
+    from core.models import Videos
     if not Videos.objects.filter(video_id=video_item["id"]["videoId"]).exists():
         snippet = video_item["snippet"]
         video = Videos(

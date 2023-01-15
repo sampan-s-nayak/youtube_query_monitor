@@ -16,5 +16,5 @@ Including another URLconf
 from django.urls import path, include
 
 urlpatterns = [
-    path('get/', include('youtube_api.urls')),
+    path('videos/', include('core.urls')),
 ]

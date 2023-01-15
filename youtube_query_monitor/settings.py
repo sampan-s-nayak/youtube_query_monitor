@@ -14,18 +14,13 @@ from pathlib import Path
 import os
 
 env = os.environ
-# Set the project base directory
-# BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-# Take environment variables from .env file
-# print(BASE_DIR)
-# environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 YOUTUBE_DATA_API_KEYS = env.get("YOUTUBE_DATA_API_KEYS")
 RESULT_REFRESH_SECONDS = int(env.get("REFRESH_DURATION"))
 SEARCH_QUERY = env.get("SEARCH_QUERY")
-MAX_PAGES_TO_QUERY_FROM_YOUTUBE = int(env.get("MAX_PAGES_TO_QUERY"))
-DB_UPDATE_PARALLELISM = int(env.get("DB_UPDATE_PARALLELISM"))
+MAX_PAGES_TO_QUERY_FROM_YOUTUBE = int(env.get("MAX_PAGES_TO_QUERY", 10))
+DB_UPDATE_PARALLELISM = int(env.get("DB_UPDATE_PARALLELISM", 1))
+DEFAULT_PAGE_LIMIT = int(env.get("DEFAULT_PAGE_LIMIT", 25))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -50,7 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'youtube_api.apps.YoutubeApiConfig',
+    'core.apps.YoutubeApiConfig',
     'django_celery_beat'
 ]
 

@@ -9,9 +9,23 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+from datetime import timedelta
 from pathlib import Path
-from celery.schedules import crontab
+import environ
+import os
+
+env = environ.Env()
+# Set the project base directory
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Take environment variables from .env file
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+
+YOUTUBE_DATA_API_KEYS = env("YOUTUBE_DATA_API_KEYS")
+RESULT_REFRESH_SECONDS = int(env("REFRESH_DURATION"))
+SEARCH_QUERY = env("SEARCH_QUERY")
+MAX_PAGES_TO_QUERY_FROM_YOUTUBE = int(env("MAX_PAGES_TO_QUERY"))
+DB_UPDATE_PARALLELISM = int(env("DB_UPDATE_PARALLELISM"))
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -126,6 +140,6 @@ CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_BEAT_SCHEDULE = {
     "update_db_task": {
         "task": "youtube_query_monitor.celery.update_db",
-        "schedule": crontab(minute=f"*/1"),
+        "schedule": timedelta(seconds=RESULT_REFRESH_SECONDS),
     },
 }

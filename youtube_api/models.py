@@ -1,14 +1,11 @@
 from django.db import models
-from django.db import models
 
 
-# Create your models here.
-
-#  Video title, description, publishing datetime, thumbnails URLs
 class Videos(models.Model):
-    video_id = models.CharField("video id", max_length=11, primary_key=True)
+    video_id = models.CharField("video id", max_length=11,
+                                primary_key=True)  # postgres auto creates a clustered index (useful for filtering)
     video_title = models.CharField("Video Title", max_length=255)
-    description = models.TextField("Description")
+    description = models.TextField("Description", db_index=True)  # index will be useful for filtering on date
     published_on = models.DateTimeField("publishing datetime")
     thumb_url = models.URLField(
         "Thumbnail URL", max_length=255, help_text="The URL to the video thumbnail"

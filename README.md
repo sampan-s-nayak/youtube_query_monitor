@@ -77,3 +77,10 @@ curl http://localhost:82/videos/\?limit\=10\&offset\=0\&query\=india
 # filtering on multiword queries
 curl http://localhost:82/videos/\?limit\=10\&offset\=0\&query\=inDia+virAt
 ```
+
+## Future Enhancements:
+
+- calling `get_video_list` utility api at server startup to prefill the db
+- grafana prometheus setup for alerting and monitoring the service
+- using Apache Solr as an alternative to postgres (Redis can also be explored as an option depending on usecae)
+- moving to a compiled language from python

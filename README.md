@@ -57,7 +57,7 @@ python manage.py runserver
 celery -A youtube_query_monitor worker
 
 # start celery django beat scheduler in terminal 3:
-celery -A youtube_query_monitor worker
+celery -A youtube_query_monitor beat -l info
 ```
 
 ## Test API
